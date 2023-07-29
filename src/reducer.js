@@ -1,4 +1,4 @@
-import { CLEAR_CART, DECREASE, INCREASE, REMOVE } from "./actions"
+import { CLEAR_CART, DECREASE, GET_TOTALS, INCREASE, REMOVE } from "./actions"
 
 // export default function reducer(state, action) {
 //   switch (action.type) {
@@ -64,6 +64,24 @@ export default function reducer(state, action){
             ...state,
             cart:state.cart.filter(ct=>ct.id !== action.payload.id)
         }
+    }
+    if(action.type === GET_TOTALS){
+        let {total, amount} = state.cart.reduce((cartTotal, cartItem)=>{
+            const{price, amount} = cartItem;
+            const itemTotal = price * amount
+            cartTotal.total += itemTotal
+            cartTotal.amount += amount
+            return cartTotal
+        },{total:0, amount:0}) 
+        total =  parseFloat(total.toFixed(2));
+        // let itemPrices = state.cart.map(
+        //     ip=>ip.price
+        // )
+        // let sum = itemPrices.reduce((accumulator,currentValue)=>{
+        //     return accumulator + currentValue
+        // },0)
+
+        return  {...state, total,amount}
     }
 
     return state
